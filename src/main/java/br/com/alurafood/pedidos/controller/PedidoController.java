@@ -4,6 +4,7 @@ import br.com.alurafood.pedidos.dto.PedidoDto;
 import br.com.alurafood.pedidos.dto.StatusDto;
 import br.com.alurafood.pedidos.service.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -14,7 +15,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/pedidos")
+@RequestMapping("/orders")
 public class PedidoController {
 
         @Autowired
@@ -36,7 +37,7 @@ public class PedidoController {
         public ResponseEntity<PedidoDto> realizaPedido(@RequestBody @Valid PedidoDto dto, UriComponentsBuilder uriBuilder) {
             PedidoDto pedidoRealizado = service.criarPedido(dto);
 
-            URI endereco = uriBuilder.path("/pedidos/{id}").buildAndExpand(pedidoRealizado.getId()).toUri();
+            URI endereco = uriBuilder.path("/orders/{id}").buildAndExpand(pedidoRealizado.getId()).toUri();
 
             return ResponseEntity.created(endereco).body(pedidoRealizado);
 
@@ -56,5 +57,10 @@ public class PedidoController {
 
             return ResponseEntity.ok().build();
 
+        }
+
+        @GetMapping("/porta")
+        public String portReturn(@Value("${local.server.port}") String port) {
+            return String.format("Response requisition for instance execute on port %s", port);
         }
 }
